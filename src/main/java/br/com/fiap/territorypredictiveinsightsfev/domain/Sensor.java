@@ -1,15 +1,13 @@
-package br.com.fiap.territorypredictiveinsightsfev.dominio;
+package br.com.fiap.territorypredictiveinsightsfev.domain;
 
-import br.com.fiap.territorypredictiveinsightsfev.excecao.FonteIndisponivelException;
+import br.com.fiap.territorypredictiveinsightsfev.exception.FonteIndisponivelException;
 
 /**
  * Contrato de todo sensor do recorte de clima.
- * Implementações: SensorChuva, SensorNivelRio, SensorUmidadeSolo.
+ * Implementações: RainSensor, RiverLevelSensor, SoilMoistureSensor.
  *
- * Cada sensor informa a própria faixa válida (getValorMinimo/getValorMaximo).
+ * Cada sensor informa a própria faixa válida (getMinValue/getMaxValue).
  * Assim a validação da medição funciona para qualquer sensor, sem if por tipo.
- *
- * Responsável: Integrante 1 (domínio e exceções)
  */
 public interface Sensor {
 
@@ -18,20 +16,20 @@ public interface Sensor {
      *
      * @throws FonteIndisponivelException se o sensor não estiver funcionando
      */
-    double lerValor() throws FonteIndisponivelException;
+    double readValue() throws FonteIndisponivelException;
 
     /** Indica se o sensor está funcionando (pode simular falha aleatória, ex.: 5% das vezes). */
-    boolean estaFuncionando();
+    boolean isWorking();
 
-    /** Tipo do sensor, ex.: "CHUVA", "NIVEL_RIO", "UMIDADE_SOLO". É o que vai para o banco. */
-    String getTipo();
+    /** Tipo do sensor: "RAIN", "RIVER_LEVEL" ou "SOIL_MOISTURE". É o que vai para o banco. */
+    String getType();
 
     /** Unidade da leitura, ex.: "mm/h", "cm", "%". */
-    String getUnidade();
+    String getUnit();
 
     /** Menor valor fisicamente válido (abaixo disso: DadosInvalidosException). */
-    double getValorMinimo();
+    double getMinValue();
 
     /** Maior valor fisicamente válido (acima disso: DadosInvalidosException). */
-    double getValorMaximo();
+    double getMaxValue();
 }

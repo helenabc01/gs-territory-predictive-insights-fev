@@ -1,20 +1,24 @@
-package br.com.fiap.territorypredictiveinsightsfev.dominio;
+package br.com.fiap.territorypredictiveinsightsfev.domain;
 
 /**
  * Classe abstrata base de tudo que existe no território monitorado
  * (ex.: uma área de risco de alagamento, um córrego, uma bacia).
- *
- * Responsável: Integrante 1 (domínio e exceções)
+ * Nome exigido pelo enunciado (mantido em português).
  */
 public abstract class ComponenteTerritorial {
 
-    // TODO: atributos privados: id, nome, regiao, status
+    private Long id;
+    private String name;
+    private String region;
+    private String status;
+
     // TODO: construtor recebendo os atributos (as filhas chamam com super(...))
     // TODO: getters (e setters só onde fizer sentido, validando com DadosInvalidosException)
 
     /**
      * TODO: cada filha decide como calcular o próprio status
-     * (ex.: "NORMAL", "EM RISCO"), a partir das leituras/limiares.
+     * (ex.: "NORMAL", "AT RISK"), a partir das leituras/limiares.
+     * Nome exigido pelo enunciado.
      */
     public abstract String verificarStatus();
 }

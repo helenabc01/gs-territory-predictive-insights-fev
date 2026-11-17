@@ -1,15 +1,19 @@
-package br.com.fiap.territorypredictiveinsightsfev.dominio;
+package br.com.fiap.territorypredictiveinsightsfev.domain;
 
 /**
  * Filha concreta de ComponenteTerritorial: um ponto vulnerável a alagamento
  * (ex.: "Baixada do córrego X - Zona Sul"). Descrever por região, nunca por pessoas.
- *
- * Responsável: Integrante 1 (domínio e exceções)
  */
-public class AreaDeRisco extends ComponenteTerritorial {
+public class RiskArea extends ComponenteTerritorial {
 
-    // TODO: atributos próprios, se quiserem (ex.: tipo de risco, se tem histórico de alagamento)
-    // TODO: construtor chamando super(id, nome, regiao, status)
+    /** Tipo de risco, ex.: "FLOOD", "LANDSLIDE". */
+    private String riskType;
+
+    /** Se a área já alagou antes (histórico conhecido). */
+    private boolean floodHistory;
+
+    // TODO: construtor chamando super(id, name, region, status) + atributos próprios
+    // TODO: getters
 
     @Override
     public String verificarStatus() {
