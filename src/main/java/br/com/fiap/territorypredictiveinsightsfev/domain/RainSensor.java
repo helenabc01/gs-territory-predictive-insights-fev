@@ -4,22 +4,16 @@ import br.com.fiap.territorypredictiveinsightsfev.exception.FonteIndisponivelExc
 
 import java.util.Random;
 
-/**
- * Sensor 1: pluviômetro. Mede intensidade de chuva em mm/h.
- * Faixa realista sugerida: 0 a 150 mm/h (valor negativo é inválido).
- *
- * Responsável: Colega 1
- */
 public class RainSensor implements Sensor {
 
     private final Random random = new Random();
 
-    // TODO (opcional): constantes privadas, ex.: TYPE, UNIT, MIN_VALUE, MAX_VALUE, FAILURE_RATE
+    // TODO (opcional): constantes privadas, ex.: MIN_VALUE, MAX_VALUE, FAILURE_RATE
 
     @Override
     public double readValue() throws FonteIndisponivelException {
-        // TODO: se !isWorking() -> throw new FonteIndisponivelException("sensor RAIN sem resposta")
-        // TODO: gerar valor aleatório entre getMinValue() e getMaxValue()
+        // TODO: se !isWorking() -> throw new FonteIndisponivelException("pluviômetro sem resposta")
+        // TODO: gerar valor aleatório realista (ex.: 0 a 80 mm/h) com 1 casa decimal
         throw new UnsupportedOperationException("TODO: implementar readValue()");
     }
 
@@ -30,8 +24,8 @@ public class RainSensor implements Sensor {
     }
 
     @Override
-    public String getType() {
-        // TODO: retornar "RAIN"
+    public SensorType getType() {
+        // TODO: retornar SensorType.RAIN
         throw new UnsupportedOperationException("TODO: implementar getType()");
     }
 

@@ -1,29 +1,30 @@
 package br.com.fiap.territorypredictiveinsightsfev.domain;
 
+import br.com.fiap.territorypredictiveinsightsfev.exception.DadosInvalidosException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-/**
- * Uma leitura de sensor gravada no banco (entidade JPA).
- * Nome exigido pelo enunciado (mantido em português).
- */
 @Entity
 public class Medicao {
+
+    private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** "RAIN", "RIVER_LEVEL" ou "SOIL_MOISTURE" (vem de sensor.getType()). */
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String sensorType;
+    private SensorType sensorType;
 
-    /** Coluna renomeada porque VALUE é palavra reservada no H2. */
     @Column(name = "measured_value", nullable = false)
     private double value;
 
@@ -33,18 +34,44 @@ public class Medicao {
     @Column(nullable = false)
     private LocalDateTime measuredAt;
 
-    // TODO: construtor Medicao(Sensor sensor, double value) throws DadosInvalidosException
-    //       - value < sensor.getMinValue() ou > sensor.getMaxValue() -> lançar DadosInvalidosException
-    //         (ex.: "medição de RAIN fora da faixa: -3.0 mm/h (válido: 0 a 150)")
-    //       - copiar sensorType e unit do sensor; measuredAt = LocalDateTime.now()
-    // TODO: getters
-    // TODO: toString() para exibir no histórico do menu
+    public Medicao(Sensor sensor, double value) throws DadosInvalidosException {
+        if (Double.isNaN(value) || value < sensor.getMinValue() || value > sensor.getMaxValue()) {
+            throw new DadosInvalidosException(String.format(
+                    "medição de %s fora da faixa: %.1f %s (válido: %.0f a %.0f %s)",
+                    sensor.getType().getLabel(), value, sensor.getUnit(),
+                    sensor.getMinValue(), sensor.getMaxValue(), sensor.getUnit()));
+        }
+        this.sensorType = sensor.getType();
+        this.value = value;
+        this.unit = sensor.getUnit();
+        this.measuredAt = LocalDateTime.now();
+    }
 
-    /** Construtor vazio exigido pelo JPA. Não usar no código do sistema. */
     protected Medicao() {
     }
 
     public Long getId() {
         return id;
+    }
+
+    public SensorType getSensorType() {
+        return sensorType;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public LocalDateTime getMeasuredAt() {
+        return measuredAt;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[%s] %s: %.1f %s", measuredAt.format(FORMAT), sensorType.getLabel(), value, unit);
     }
 }

@@ -4,22 +4,16 @@ import br.com.fiap.territorypredictiveinsightsfev.exception.FonteIndisponivelExc
 
 import java.util.Random;
 
-/**
- * Sensor 2: régua/sensor de nível do córrego ou rio. Mede a altura da água em cm.
- * Faixa realista sugerida: 0 a 800 cm.
- *
- * Responsável: Colega 2
- */
 public class RiverLevelSensor implements Sensor {
 
     private final Random random = new Random();
 
-    // TODO (opcional): constantes privadas, ex.: TYPE, UNIT, MIN_VALUE, MAX_VALUE, FAILURE_RATE
+    // TODO (opcional): constantes privadas, ex.: MIN_VALUE, MAX_VALUE, FAILURE_RATE
 
     @Override
     public double readValue() throws FonteIndisponivelException {
-        // TODO: se !isWorking() -> throw new FonteIndisponivelException("sensor RIVER_LEVEL sem resposta")
-        // TODO: gerar valor aleatório entre getMinValue() e getMaxValue()
+        // TODO: se !isWorking() -> throw new FonteIndisponivelException("sensor de nível do rio sem resposta")
+        // TODO: gerar valor aleatório realista (ex.: 100 a 700 cm) com 1 casa decimal
         throw new UnsupportedOperationException("TODO: implementar readValue()");
     }
 
@@ -30,8 +24,8 @@ public class RiverLevelSensor implements Sensor {
     }
 
     @Override
-    public String getType() {
-        // TODO: retornar "RIVER_LEVEL"
+    public SensorType getType() {
+        // TODO: retornar SensorType.RIVER_LEVEL
         throw new UnsupportedOperationException("TODO: implementar getType()");
     }
 

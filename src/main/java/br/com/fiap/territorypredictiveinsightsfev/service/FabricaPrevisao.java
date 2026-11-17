@@ -1,25 +1,43 @@
 package br.com.fiap.territorypredictiveinsightsfev.service;
 
 import br.com.fiap.territorypredictiveinsightsfev.domain.EstrategiaPrevisao;
+import br.com.fiap.territorypredictiveinsightsfev.domain.PrevisaoComparacao;
+import br.com.fiap.territorypredictiveinsightsfev.domain.PrevisaoMediaMovel;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
-/**
- * Padrão criacional FACTORY: cria a EstrategiaPrevisao a partir da configuração,
- * SEM if tipo == / instanceof espalhado pelo código.
- * Nome exigido pelo enunciado. Justificar no README por que Factory aqui.
- */
 public class FabricaPrevisao {
 
-    /** Nome da estratégia -> como criá-la. É o mapa que substitui os ifs. */
-    private final Map<String, Supplier<EstrategiaPrevisao>> creators = new HashMap<>();
+    public static final String MOVING_AVERAGE = "MOVING_AVERAGE";
+    public static final String COMPARISON = "COMPARISON";
 
-    // TODO: construtor registrando as estratégias:
-    //       creators.put("MOVING_AVERAGE", PrevisaoMediaMovel::new);
-    //       creators.put("COMPARISON", PrevisaoComparacao::new);
-    // TODO: EstrategiaPrevisao create(String type)
-    //       tipo desconhecido -> exceção com mensagem clara
-    // TODO (opcional): List<EstrategiaPrevisao> createAll() para rodar as duas no menu
+    private final Map<String, Supplier<EstrategiaPrevisao>> creators = new LinkedHashMap<>();
+
+    public FabricaPrevisao() {
+        creators.put(MOVING_AVERAGE, PrevisaoMediaMovel::new);
+        creators.put(COMPARISON, PrevisaoComparacao::new);
+    }
+
+    public EstrategiaPrevisao create(String type) {
+        return Optional.ofNullable(creators.get(type))
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "estratégia de previsão desconhecida: " + type + ". Opções: " + creators.keySet()))
+                .get();
+    }
+
+    public EstrategiaPrevisao createConfigured() {
+        return create(ConfiguracaoSistema.getInstance().getDefaultStrategy());
+    }
+
+    public List<EstrategiaPrevisao> createAll() {
+        return creators.values().stream().map(Supplier::get).toList();
+    }
+
+    public List<String> availableTypes() {
+        return List.copyOf(creators.keySet());
+    }
 }

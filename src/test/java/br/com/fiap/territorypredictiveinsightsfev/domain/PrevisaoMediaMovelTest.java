@@ -1,14 +1,47 @@
 package br.com.fiap.territorypredictiveinsightsfev.domain;
 
-/**
- * Testes unitários das estratégias de previsão. Padrão AAA.
- * "Testes de verdade": se o cálculo errar, o teste tem que ficar vermelho.
- */
+import br.com.fiap.territorypredictiveinsightsfev.exception.DadosInvalidosException;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class PrevisaoMediaMovelTest {
 
-    // TODO: shouldAverageLastReadings()
-    //       Arrange: medições 10, 20, 30, 40, 50 | Act: prever(...) | Assert: assertEquals(30.0, result, 0.001)
+    private final FakeSensor sensor = FakeSensor.rain();
+    private final PrevisaoMediaMovel strategy = new PrevisaoMediaMovel();
 
-    // TODO: shouldRejectHistoryWithTooFewReadings()
-    //       (o sistema deve "se calar" com menos de MIN_READINGS leituras)
+    @Test
+    void shouldAverageTheFiveMostRecentReadings() throws Exception {
+        List<Medicao> history = sensor.measurements(10, 20, 30, 40, 50, 100, 100);
+
+        double result = strategy.prever(history);
+
+        assertEquals(30.0, result, 0.001);
+    }
+
+    @Test
+    void shouldReturnTheSameValueWhenAllReadingsAreEqual() throws Exception {
+        List<Medicao> history = sensor.measurements(12, 12, 12, 12, 12);
+
+        double result = strategy.prever(history);
+
+        assertEquals(12.0, result, 0.001);
+    }
+
+    @Test
+    void shouldRefuseToForecastWithTooFewReadings() throws Exception {
+        List<Medicao> history = sensor.measurements(10, 20, 30, 40);
+
+        assertThrows(DadosInvalidosException.class, () -> strategy.prever(history));
+    }
+
+    @Test
+    void shouldRefuseToForecastWithEmptyHistory() {
+        List<Medicao> history = List.of();
+
+        assertThrows(DadosInvalidosException.class, () -> strategy.prever(history));
+    }
 }

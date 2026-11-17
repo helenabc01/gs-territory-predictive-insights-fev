@@ -37,14 +37,11 @@ Testes:
 
 | Pacote | Conteúdo |
 |---|---|
-| `domain/` | ComponenteTerritorial, RiskArea, Sensor (+ RainSensor, RiverLevelSensor, SoilMoistureSensor), DadosTerritorio, EstrategiaPrevisao, PrevisaoMediaMovel, PrevisaoComparacao, Medicao, Alerta, NivelAlerta |
-| `exception/` | DadosInvalidosException, FonteIndisponivelException |
-| `persistence/` | MedicaoRepository, AlertaRepository (Spring Data JPA) |
-| `service/` | ServicoMonitoramento, FabricaPrevisao, ConfiguracaoSistema |
+| `dominio/` | ComponenteTerritorial, AreaDeRisco, Sensor (+ SensorChuva, SensorNivelRio, SensorUmidadeSolo), DadosTerritorio, EstrategiaPrevisao, PrevisaoMediaMovel, PrevisaoComparacao, Medicao, Alerta, NivelAlerta |
+| `excecao/` | DadosInvalidosException, FonteIndisponivelException |
+| `persistencia/` | MedicaoRepository, AlertaRepository (Spring Data JPA) |
+| `servico/` | ServicoMonitoramento, FabricaPrevisao, ConfiguracaoSistema |
 | raiz | SistemaMonitoramento (menu de console) |
-
-Padrão de código: inglês. As classes e métodos que o enunciado exige pelo nome
-(ex.: `ComponenteTerritorial`, `EstrategiaPrevisao.prever()`, `MedicaoRepository`) foram mantidos em português.
 
 ## Decisões da equipe
 

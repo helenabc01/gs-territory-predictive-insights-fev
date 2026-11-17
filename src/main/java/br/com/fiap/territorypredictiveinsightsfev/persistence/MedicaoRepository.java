@@ -1,14 +1,17 @@
 package br.com.fiap.territorypredictiveinsightsfev.persistence;
 
 import br.com.fiap.territorypredictiveinsightsfev.domain.Medicao;
+import br.com.fiap.territorypredictiveinsightsfev.domain.SensorType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-/**
- * Acesso ao banco para as medições (Spring Data JPA). save() e findAll() já vêm prontos.
- * Nome exigido pelo enunciado.
- */
+import java.util.List;
+import java.util.Optional;
+
 public interface MedicaoRepository extends JpaRepository<Medicao, Long> {
 
-    // TODO: histórico por sensor (nomes batem com os atributos de Medicao):
-    //       List<Medicao> findBySensorTypeOrderByMeasuredAtDesc(String sensorType);
+    List<Medicao> findBySensorTypeOrderByIdDesc(SensorType sensorType);
+
+    Optional<Medicao> findFirstBySensorTypeOrderByIdDesc(SensorType sensorType);
+
+    long countBySensorType(SensorType sensorType);
 }

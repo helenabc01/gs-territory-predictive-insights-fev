@@ -4,52 +4,53 @@ import br.com.fiap.territorypredictiveinsightsfev.exception.FonteIndisponivelExc
 
 import java.util.Random;
 
-/**
- * Sensor 3: umidade/saturação do solo em %. Solo saturado não absorve chuva -> mais alagamento.
- * Faixa válida: 0 a 100 %.
- *
- * Responsável: integrante principal
- */
 public class SoilMoistureSensor implements Sensor {
+
+    private static final double MIN_VALUE = 0;
+    private static final double MAX_VALUE = 100;
+
+    private static final double TYPICAL_MIN = 40;
+
+    private static final double FAILURE_RATE = 0.05;
+
+    private static final double NOISE_RATE = 0.03;
 
     private final Random random = new Random();
 
-    // TODO (opcional): constantes privadas, ex.: TYPE, UNIT, MIN_VALUE, MAX_VALUE, FAILURE_RATE
-
     @Override
     public double readValue() throws FonteIndisponivelException {
-        // TODO: se !isWorking() -> throw new FonteIndisponivelException("sensor SOIL_MOISTURE sem resposta")
-        // TODO: gerar valor aleatório entre getMinValue() e getMaxValue()
-        throw new UnsupportedOperationException("TODO: implementar readValue()");
+        if (!isWorking()) {
+            throw new FonteIndisponivelException("sensor de umidade do solo sem resposta (falha simulada)");
+        }
+        if (random.nextDouble() < NOISE_RATE) {
+            return MAX_VALUE + 5;
+        }
+        double value = TYPICAL_MIN + random.nextDouble() * (MAX_VALUE - TYPICAL_MIN);
+        return Math.round(value * 10) / 10.0;
     }
 
     @Override
     public boolean isWorking() {
-        // TODO: simular falha de vez em quando (ex.: 5% das vezes retorna false)
-        throw new UnsupportedOperationException("TODO: implementar isWorking()");
+        return random.nextDouble() >= FAILURE_RATE;
     }
 
     @Override
-    public String getType() {
-        // TODO: retornar "SOIL_MOISTURE"
-        throw new UnsupportedOperationException("TODO: implementar getType()");
+    public SensorType getType() {
+        return SensorType.SOIL_MOISTURE;
     }
 
     @Override
     public String getUnit() {
-        // TODO: retornar "%"
-        throw new UnsupportedOperationException("TODO: implementar getUnit()");
+        return "%";
     }
 
     @Override
     public double getMinValue() {
-        // TODO: retornar 0
-        throw new UnsupportedOperationException("TODO: implementar getMinValue()");
+        return MIN_VALUE;
     }
 
     @Override
     public double getMaxValue() {
-        // TODO: retornar 100
-        throw new UnsupportedOperationException("TODO: implementar getMaxValue()");
+        return MAX_VALUE;
     }
 }

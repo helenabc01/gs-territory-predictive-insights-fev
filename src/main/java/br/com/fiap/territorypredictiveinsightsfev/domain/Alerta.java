@@ -9,21 +9,20 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-/**
- * Alerta emitido quando a previsão estoura um limiar (entidade JPA).
- * Precisa explicar o PORQUÊ: qual sensor, valor previsto e limite estourado.
- * Nome exigido pelo enunciado (mantido em português).
- */
 @Entity
 public class Alerta {
+
+    private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String sensorType;
+    private SensorType sensorType;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -32,30 +31,66 @@ public class Alerta {
     @Column(nullable = false)
     private double predictedValue;
 
-    /** O limiar que foi ultrapassado (ex.: 50.0 mm/h para CRITICO). */
     @Column(nullable = false)
     private double exceededThreshold;
 
-    /** Nome da estratégia que gerou a previsão (ex.: "Moving average"). */
     @Column(nullable = false)
     private String strategyName;
 
-    /** Explicação do porquê do alerta, montada pelo serviço. */
     @Column(nullable = false, length = 500)
     private String message;
 
     @Column(nullable = false)
     private LocalDateTime issuedAt;
 
-    // TODO: construtor com os campos (issuedAt = LocalDateTime.now())
-    // TODO: getters
-    // TODO: toString() para exibir no menu
+    public Alerta(SensorType sensorType, NivelAlerta level, double predictedValue,
+                  double exceededThreshold, String strategyName, String message) {
+        this.sensorType = sensorType;
+        this.level = level;
+        this.predictedValue = predictedValue;
+        this.exceededThreshold = exceededThreshold;
+        this.strategyName = strategyName;
+        this.message = message;
+        this.issuedAt = LocalDateTime.now();
+    }
 
-    /** Construtor vazio exigido pelo JPA. Não usar no código do sistema. */
     protected Alerta() {
     }
 
     public Long getId() {
         return id;
+    }
+
+    public SensorType getSensorType() {
+        return sensorType;
+    }
+
+    public NivelAlerta getLevel() {
+        return level;
+    }
+
+    public double getPredictedValue() {
+        return predictedValue;
+    }
+
+    public double getExceededThreshold() {
+        return exceededThreshold;
+    }
+
+    public String getStrategyName() {
+        return strategyName;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public LocalDateTime getIssuedAt() {
+        return issuedAt;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[%s] %s - %s", issuedAt.format(FORMAT), level.getDescription().toUpperCase(), message);
     }
 }

@@ -1,29 +1,31 @@
 package br.com.fiap.territorypredictiveinsightsfev.domain;
 
+import br.com.fiap.territorypredictiveinsightsfev.exception.DadosInvalidosException;
+
 import java.util.List;
 
-/**
- * Previsão 2: compara o período recente com o período anterior
- * e projeta a tendência (subindo/descendo).
- * Nome exigido pelo enunciado.
- */
 public class PrevisaoComparacao extends EstrategiaPrevisao {
 
     private static final int DEFAULT_PERIOD_SIZE = 3;
 
-    /** Quantas leituras formam cada período (atual e anterior). */
     private final int periodSize;
 
     public PrevisaoComparacao() {
-        super("Previous period comparison");
+        super("Comparação com período anterior");
         this.periodSize = DEFAULT_PERIOD_SIZE;
     }
 
     @Override
-    public double prever(List<Medicao> history) {
-        // TODO: chamar a validação comum da mãe (super.validateHistory(history))
-        // TODO: média das periodSize leituras mais recentes (atual) x as periodSize anteriores
-        // TODO: projetar a tendência: atual + (atual - anterior)
-        throw new UnsupportedOperationException("TODO: implementar prever() da comparação");
+    public String getDescription() {
+        return "tendência entre as " + periodSize + " leituras mais recentes e as " + periodSize + " anteriores";
+    }
+
+    @Override
+    public double prever(List<Medicao> history) throws DadosInvalidosException {
+        super.validateHistory(history, periodSize * 2);
+        double current = average(history.subList(0, periodSize));
+        double previous = average(history.subList(periodSize, periodSize * 2));
+        double projection = current + (current - previous);
+        return Math.max(0, projection);
     }
 }
