@@ -6,27 +6,27 @@ Aplicação Java de console para simular o monitoramento de chuva, nível de rio
 
 ## 1. Estado atual do projeto
 
-**Esta versão ainda está em conclusão.** O sensor de nível do rio precisa ser implementado pelo Pedro. A existência da classe e a aprovação dos testes atuais não significam que esse sensor já funciona.
+**Esta versão ainda está em conclusão.** O sensor de nível do rio foi implementado por Pedro e os testes automatizados da suíte foram ampliados. A validação manual completa do fluxo e da persistência após reinício continua pendente.
 
 Marco validado em 19/11/2026 na branch `fix/sensor-chuva-readme`:
 
 - Sensor de chuva implementado e cinco testes específicos adicionados por Bruna.
 - Compilação com alvo Java 17 (`release 17`).
-- Execução de `bash mvnw test`: **39 testes, 0 falhas, 0 erros e 0 ignorados; BUILD SUCCESS**.
+- Execução de `bash mvnw test`: **44 testes, 0 falhas, 0 erros e 0 ignorados; BUILD SUCCESS**.
+- Sensor de nível do rio implementado, com cinco testes específicos adicionados por Pedro.
 - Commit `9a42249`: `Implementa sensor de chuva e adiciona testes unitarios`, enviado ao GitHub.
 - Sensor de umidade já implementado na base recebida.
-- Sensor de nível do rio ainda com métodos que lançam `UnsupportedOperationException`.
 - Persistência e menu implementados; validação manual completa, incluindo reinício da aplicação, pendente.
 - Integração das branches à `main` pendente de confirmação.
 
-O resultado de 39 testes corresponde a esse marco; deverá ser atualizado após os testes do Pedro. O roteiro de continuidade está na seção 12.
+O resultado de 44 testes corresponde ao estado atual após a implementação dos sensores de chuva e rio. O roteiro de validação final está na seção 12.
 
 ## 2. Equipe e divisão de tarefas
 
 | Integrante | RM | Participação e situação |
 |---|---|---|
-| Bruna Marques e Queiroz | 565648 | Implementação do `RainSensor`, inclusão do `RainSensorTest`, execução da suíte com 39 testes aprovados e preparação desta documentação. |
-| Pedro Lisboa | PREENCHER | Planejado, ainda pendente: implementar `RiverLevelSensor`, adicionar testes específicos, validar o fluxo completo e a persistência após reinício, atualizar os resultados finais e registrar seus commits. |
+| Bruna Marques e Queiroz | 565648 | Implementação do `RainSensor`, inclusão do `RainSensorTest`, execução da primeira suíte com 39 testes aprovados e preparação desta documentação. |
+| Pedro Lisboa | PREENCHER | Implementação do `RiverLevelSensor`, inclusão do `RiverLevelSensorTest` e execução da suíte atual com 44 testes aprovados. |
 | Helena Barbosa | PREENCHER | O repositório está hospedado na conta `helenabc01`. Confirmar e registrar sua contribuição técnica efetiva antes da entrega. |
 
 As responsabilidades planejadas não devem ser apresentadas como trabalho já realizado. Cada integrante deve registrar as próprias alterações com nome e e-mail corretos no Git e compreender o código apresentado.
@@ -136,7 +136,7 @@ O código de acesso didático para alterar limiares é **`GS2026`**, definido em
 | Sensor | Tipo | Unidade | Faixa aceita por `Medicao` | Simulação | Situação |
 |---|---|---|---|---|---|
 | `RainSensor` | `RAIN` | mm/h | 0 a 150, inclusive | 0 a 80, uma casa decimal; 5% de chance de falha por verificação | Implementado e com cinco testes específicos. |
-| `RiverLevelSensor` | `RIVER_LEVEL` | cm | Planejada: 0 a 800, inclusive | Planejada: 100 a 700, uma casa decimal; 5% de chance de falha | Pendente de implementação por Pedro. |
+| `RiverLevelSensor` | `RIVER_LEVEL` | cm | 0 a 800, inclusive | 100 a 700, uma casa decimal; 5% de chance de falha | Implementado e com cinco testes específicos. |
 | `SoilMoistureSensor` | `SOIL_MOISTURE` | % | 0 a 100, inclusive | 40 a 100; 5% de chance de falha. Após passar pela verificação de funcionamento, há 3% de chance de retornar 105 para simular leitura inválida. | Implementado na base recebida. |
 
 As faixas e probabilidades são parâmetros didáticos. A faixa de validação pode ser maior que a faixa usada para gerar as leituras de demonstração.
@@ -148,7 +148,7 @@ As faixas e probabilidades são parâmetros didáticos. A faixa de validação p
 
 As duas exceções são checked, tornando explícita a necessidade de propagação ou tratamento. O menu as captura e apresenta mensagens compreensíveis. Erros de digitação numérica também recebem mensagens. O construtor de `DadosTerritorio` e a fábrica usam `IllegalArgumentException` para argumentos de criação/configuração inválidos.
 
-Enquanto o sensor de rio estiver incompleto, a opção de leitura exibirá `[PENDENTE]` para ele. Essa mensagem representa falta de implementação, não uma falha simulada normal.
+O sensor de rio funciona como os outros sensores simulados: falhas são representadas por `FonteIndisponivelException`, enquanto leituras fora da faixa são rejeitadas pela validação de `Medicao`.
 
 ## 7. Previsões e alertas
 
@@ -211,7 +211,7 @@ Outras decisões:
 ### Domínio orientado a objetos
 
 - `ComponenteTerritorial` é abstrata e define `verificarStatus()`; `RiskArea` herda dela e implementa o comportamento.
-- `Sensor` define o contrato comum dos três sensores. A implementação funcional de `RiverLevelSensor` ainda precisa ser concluída.
+- `Sensor` define o contrato comum dos três sensores. `RainSensor`, `RiverLevelSensor` e `SoilMoistureSensor` implementam esse contrato.
 - `DadosTerritorio` mantém atributos privados e exige código de acesso para alterar limiares pelo seu método de negócio.
 - `EstrategiaPrevisao` é abstrata. `PrevisaoMediaMovel` e `PrevisaoComparacao` usam `super`, compartilham validação e sobrescrevem `prever()`.
 
@@ -237,7 +237,7 @@ Execute somente os testes do sensor de chuva:
 bash mvnw -Dtest=RainSensorTest test
 ```
 
-Resultado confirmado no marco de Bruna: **39 testes aprovados**, incluindo cinco em `RainSensorTest`:
+Resultado confirmado no marco atual: **44 testes aprovados**, incluindo cinco em `RainSensorTest` e cinco em `RiverLevelSensorTest`:
 
 1. Geração e arredondamento da leitura para uma casa decimal.
 2. Lançamento de `FonteIndisponivelException` na falha simulada, sem gerar a leitura em seguida.
@@ -247,7 +247,7 @@ Resultado confirmado no marco de Bruna: **39 testes aprovados**, incluindo cinco
 
 Os testes seguem Arrange, Act e Assert. `assertThrows` verifica exceções customizadas. `ServicoMonitoramentoTest` usa repositórios simulados com Mockito para conferir emissão de alerta, cálculo e gravação sem depender de banco ou digitação no console. Outras classes cobrem estratégias, território, configuração, fábrica, medições e áreas de risco; há também um teste de carregamento do contexto Spring.
 
-Os 39 testes não incluem ainda os testes específicos do sensor de rio nem comprovam, sozinhos, o fluxo manual de reinício e recuperação do histórico.
+Os testes específicos do sensor de rio estão em `RiverLevelSensorTest`. A suíte automatizada não substitui a validação manual completa do fluxo e da recuperação do histórico após reinício.
 
 ## 11. Reflexão crítica
 
@@ -261,7 +261,7 @@ O alerta deve apoiar uma pessoa responsável, fornecendo sensor, valor, limite, 
 
 ## 12. Continuidade — roteiro para Pedro
 
-**Responsável previsto: Pedro. Esta seção registra trabalho ainda pendente, para que a conclusão possa ocorrer sem a presença da Bruna.**
+**Responsável pela implementação: Pedro. Esta seção conserva o roteiro usado para concluir o sensor de rio e orientar a validação final da entrega.**
 
 ### 12.1. Começar pela versão correta
 
@@ -418,7 +418,7 @@ bash mvnw test
 
 ## 13. Uso de inteligência artificial
 
-O ChatGPT foi utilizado como ferramenta de apoio à ideação, à revisão ortográfica e à organização da documentação, além de auxiliar na elaboração e revisão de trechos de código e testes. As sugestões aplicadas foram verificadas por meio da execução local da suíte, com 39 testes aprovados nesta etapa. A equipe permanece responsável pelas decisões, pela compreensão do código e pela validação final do projeto.
+O ChatGPT foi utilizado como ferramenta de apoio à ideação, à revisão ortográfica e à organização da documentação, além de auxiliar na elaboração e revisão de trechos de código e testes. As sugestões aplicadas foram verificadas por meio da execução local da suíte, com 44 testes aprovados nesta etapa. A equipe permanece responsável pelas decisões, pela compreensão do código e pela validação final do projeto.
 
 ## 14. Checklist antes da entrega
 
@@ -426,12 +426,12 @@ O ChatGPT foi utilizado como ferramenta de apoio à ideação, à revisão ortog
 - [x] Exceções customizadas e tratamento no menu presentes.
 - [x] Sensor de chuva implementado, com cinco testes específicos aprovados.
 - [x] Sensor de umidade implementado na base recebida.
-- [ ] Sensor de nível do rio implementado e testado por Pedro.
+- [x] Sensor de nível do rio implementado e testado por Pedro.
 - [x] Entidades, repositories e configuração H2 em arquivo presentes.
 - [ ] Fluxo completo e recuperação de medições/alertas após reinício validados manualmente.
 - [x] Factory e Singleton descritos e justificados neste README.
-- [x] Marco de 39 testes aprovados, incluindo `assertThrows` e Mockito.
-- [ ] Suíte final executada após integração das alterações de Pedro.
+- [x] Marcos de 39 testes para chuva e 44 testes após o sensor de rio, incluindo `assertThrows` e Mockito.
+- [x] Suíte atual executada após a implementação do sensor de rio: 44 testes aprovados.
 - [x] Público beneficiado, decisões técnicas, reflexão crítica e uso de IA documentados com as informações confirmadas.
 - [ ] Nomes completos, RMs, contribuições e uso de IA de todos os integrantes confirmados.
 - [ ] Commits dos integrantes e integração final à `main` conferidos.
