@@ -6,44 +6,54 @@ import java.util.Random;
 
 public class RiverLevelSensor implements Sensor {
 
-    private final Random random = new Random();
+    private static final double MIN_VALUE = 0;
+    private static final double MAX_VALUE = 800;
+    private static final double SIMULATED_MIN = 100;
+    private static final double SIMULATED_MAX = 700;
+    private static final double FAILURE_RATE = 0.05;
 
-    // TODO (opcional): constantes privadas, ex.: MIN_VALUE, MAX_VALUE, FAILURE_RATE
+    private final Random random;
+
+    public RiverLevelSensor() {
+        this(new Random());
+    }
+
+    RiverLevelSensor(Random random) {
+        this.random = random;
+    }
 
     @Override
     public double readValue() throws FonteIndisponivelException {
-        // TODO: se !isWorking() -> throw new FonteIndisponivelException("sensor de nível do rio sem resposta")
-        // TODO: gerar valor aleatório realista (ex.: 100 a 700 cm) com 1 casa decimal
-        throw new UnsupportedOperationException("TODO: implementar readValue()");
+        if (!isWorking()) {
+            throw new FonteIndisponivelException("sensor de nível do rio sem resposta (falha simulada)");
+        }
+
+        double value = SIMULATED_MIN + random.nextDouble() * (SIMULATED_MAX - SIMULATED_MIN);
+        return Math.round(value * 10) / 10.0;
     }
 
     @Override
     public boolean isWorking() {
-        // TODO: simular falha de vez em quando (ex.: 5% das vezes retorna false)
-        throw new UnsupportedOperationException("TODO: implementar isWorking()");
+        return random.nextDouble() >= FAILURE_RATE;
     }
 
     @Override
     public SensorType getType() {
-        // TODO: retornar SensorType.RIVER_LEVEL
-        throw new UnsupportedOperationException("TODO: implementar getType()");
+        return SensorType.RIVER_LEVEL;
     }
 
     @Override
     public String getUnit() {
-        // TODO: retornar "cm"
-        throw new UnsupportedOperationException("TODO: implementar getUnit()");
+        return "cm";
     }
 
     @Override
     public double getMinValue() {
-        // TODO: retornar 0
-        throw new UnsupportedOperationException("TODO: implementar getMinValue()");
+        return MIN_VALUE;
     }
 
     @Override
     public double getMaxValue() {
-        // TODO: retornar 800
-        throw new UnsupportedOperationException("TODO: implementar getMaxValue()");
+        return MAX_VALUE;
     }
 }
