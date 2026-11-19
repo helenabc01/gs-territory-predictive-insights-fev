@@ -6,7 +6,7 @@ Aplicação Java de console para simular o monitoramento de chuva, nível de rio
 
 ## 1. Estado atual do projeto
 
-**Esta versão ainda está em conclusão.** O sensor de nível do rio foi implementado por Pedro e os testes automatizados da suíte foram ampliados. A validação manual completa do fluxo e da persistência após reinício continua pendente.
+**Implementação concluída; validação operacional final pendente.** Os três sensores, persistência, previsões, alertas, menu e testes automatizados estão implementados. A suíte tem 44 testes aprovados. Ainda falta validar manualmente o fluxo completo e a persistência após reiniciar a aplicação, além de integrar esta branch à `main`.
 
 Marco validado em 19/11/2026:
 
@@ -15,23 +15,23 @@ Marco validado em 19/11/2026:
 - Execução de `bash mvnw test`: **44 testes, 0 falhas, 0 erros e 0 ignorados; BUILD SUCCESS**.
 - Sensor de nível do rio implementado, com cinco testes específicos adicionados por Pedro.
 - Commit `9a42249`: `Implementa sensor de chuva e adiciona testes unitarios`, enviado ao GitHub.
-- Branch `fix/sensor-rio-validacao` criada para concluir o sensor de rio.
-- Commit `9baec99`: `Implementa sensor de nivel do rio e adiciona testes`, contendo a implementação e os cinco testes específicos do sensor de rio.
+- Commit `9baec99`: `Implementa sensor de nivel do rio e adiciona testes`.
+- Commit `45c2d8d`: atualização da documentação do sensor de rio e dos comandos de teste.
 - Sensor de umidade já implementado na base recebida.
 - Persistência e menu implementados; validação manual completa, incluindo reinício da aplicação, pendente.
 - Integração das branches à `main` pendente de confirmação.
 
-O resultado de 44 testes corresponde ao estado atual após a implementação dos sensores de chuva e rio. O roteiro de validação final está na seção 12.
+O resultado de 44 testes corresponde ao estado atual após a implementação dos sensores de chuva e rio.
 
 ## 2. Equipe e divisão de tarefas
 
 | Integrante | RM | Participação e situação |
 |---|---|---|
-| Bruna Marques e Queiroz | 565648 | Implementação do `RainSensor`, inclusão do `RainSensorTest`, execução da primeira suíte com 39 testes aprovados e preparação desta documentação. |
-| Pedro Lisboa | PREENCHER | Implementação do `RiverLevelSensor`, inclusão do `RiverLevelSensorTest` e execução da suíte atual com 44 testes aprovados. |
-| Helena Barbosa | PREENCHER | O repositório está hospedado na conta `helenabc01`. Confirmar e registrar sua contribuição técnica efetiva antes da entrega. |
+| Bruna Marques | 565648 | Implementação do `RainSensor`, inclusão do `RainSensorTest` e documentação inicial do projeto. |
+| Pedro Lisboa | 565722 | Implementação do `RiverLevelSensor`, inclusão do `RiverLevelSensorTest` e atualização da documentação. |
+| Helena Barbosa | 562450 | Implementação da estrutura principal do monitoramento, previsões, alertas, menu de console e testes. |
 
-As responsabilidades planejadas não devem ser apresentadas como trabalho já realizado. Cada integrante deve registrar as próprias alterações com nome e e-mail corretos no Git e compreender o código apresentado.
+As contribuições estão registradas no histórico Git. Cada integrante deve compreender e estar preparado para explicar o código associado à sua participação.
 
 ## 3. Problema, público beneficiado e recorte
 
@@ -245,13 +245,7 @@ Execute somente os testes do sensor de nível do rio:
 bash mvnw -Dtest=RiverLevelSensorTest test
 ```
 
-Resultado confirmado no marco atual: **44 testes aprovados**, incluindo cinco em `RainSensorTest` e cinco em `RiverLevelSensorTest`:
-
-1. Geração e arredondamento da leitura para uma casa decimal.
-2. Lançamento de `FonteIndisponivelException` na falha simulada, sem gerar a leitura em seguida.
-3. Funcionamento no limite de probabilidade de falha (`0.05`).
-4. Identificação do tipo, unidade e faixa do sensor de chuva.
-5. Aceitação dos limites válidos e rejeição de medições fora da faixa pela classe `Medicao`, usando o sensor de chuva.
+Resultado confirmado no marco atual: **44 testes aprovados**, incluindo cinco em `RainSensorTest` e cinco em `RiverLevelSensorTest`. Para ambos os sensores, os testes cobrem leitura arredondada, falha simulada e sua exceção, limite da probabilidade de falha, tipo/unidade/faixa e validação dos limites da medição.
 
 Os testes seguem Arrange, Act e Assert. `assertThrows` verifica exceções customizadas. `ServicoMonitoramentoTest` usa repositórios simulados com Mockito para conferir emissão de alerta, cálculo e gravação sem depender de banco ou digitação no console. Outras classes cobrem estratégias, território, configuração, fábrica, medições e áreas de risco; há também um teste de carregamento do contexto Spring.
 
@@ -267,168 +261,27 @@ Os dados simulados não representam uma comunidade real. Um sensor por tipo não
 
 O alerta deve apoiar uma pessoa responsável, fornecendo sensor, valor, limite, estratégia e justificativa. A decisão de avisar moradores, interditar uma via ou abrir um ponto de apoio exige avaliação humana, protocolos oficiais e outras fontes de informação. O protótipo demonstra como organizar e testar esse apoio com POO; não demonstra capacidade operacional de prever desastres. Uma evolução exigiria sensores reais, calibração local, avaliação de falsos positivos e falsos negativos, controle de qualidade temporal e validação com os responsáveis pelo território.
 
-## 12. Continuidade — roteiro para Pedro
+## 12. Conclusão e pendências
 
-**Responsável pela implementação: Pedro. Esta seção conserva o roteiro usado para concluir o sensor de rio e orientar a validação final da entrega.**
+### Concluído
 
-### 12.1. Começar pela versão correta
+- Implementados os três sensores simulados: chuva, nível do rio e umidade do solo.
+- Implementadas validação de medições, exceções customizadas, persistência JPA/H2, menu, histórico, previsões e alertas.
+- Aplicados os padrões Factory (`FabricaPrevisao`) e Singleton (`ConfiguracaoSistema`), justificados neste README.
+- Suíte automatizada executada com Java 17: **44 testes aprovados, sem falhas, erros ou testes ignorados**.
+- Incluídos testes específicos para os sensores de chuva e rio.
+- Registradas as contribuições e os RMs da equipe na seção 2.
 
-Bruna publicou o sensor de chuva na branch `fix/sensor-chuva-readme`. Este README também deverá estar enviado nessa branch antes de Pedro começar. Criar a branch de Pedro a partir dela garante que os dois arquivos de chuva e esta documentação estarão disponíveis, mesmo antes do merge na `main`.
+### Ainda por validar antes da entrega
 
-Se ainda não tiver o repositório, clone-o pelo comando da seção 5. Se já tiver, abra o terminal na raiz e confira `git status`; conclua ou preserve alterações locais antes de trocar de branch.
-
-```bash
-git fetch origin
-git switch -c fix/sensor-rio-validacao origin/fix/sensor-chuva-readme
-```
-
-O comando acima é para criar a branch uma única vez. Se ela já existir, use `git switch fix/sensor-rio-validacao` e confira se contém o trabalho de Bruna antes de prosseguir. Não recrie a branch nem descarte alterações locais.
-
-Configure sua própria identidade somente neste repositório, substituindo os exemplos pelos seus dados:
-
-```bash
-git config --local user.name "NOME COMPLETO DO PEDRO"
-git config --local user.email "EMAIL DO PEDRO VINCULADO AO GITHUB"
-git branch --show-current
-git config user.name
-git config user.email
-```
-
-Use sua própria conta para enviar os commits. O e-mail configura a autoria; ele não faz login no GitHub.
-
-### 12.2. Implementar `RiverLevelSensor`
-
-Editar este arquivo existente:
-
-```text
-src/main/java/br/com/fiap/territorypredictiveinsightsfev/domain/RiverLevelSensor.java
-```
-
-Substituir os seis métodos pendentes por comportamentos funcionais:
-
-| Método | Comportamento esperado |
-|---|---|
-| `readValue()` | Verificar funcionamento; se falhar, lançar `FonteIndisponivelException` com mensagem clara. Caso contrário, simular valor de 100 a 700 cm e arredondar para uma casa decimal. |
-| `isWorking()` | Simular 5% de chance de falha por verificação. |
-| `getType()` | Retornar `SensorType.RIVER_LEVEL`. |
-| `getUnit()` | Retornar `"cm"`. |
-| `getMinValue()` | Retornar `0`. |
-| `getMaxValue()` | Retornar `800`. |
-
-Usar constantes privadas para limites, faixa simulada e taxa de falha. Preservar o construtor sem argumentos, pois o serviço já instancia `new RiverLevelSensor()`. Seguir o desenho do sensor de chuva com um segundo construtor que receba `Random` para testes controlados. O serviço já inclui o sensor de rio na lista; não é necessário criar outro menu ou outro repository.
-
-O gerador deverá usar a faixa de rio, não a faixa de chuva: `100 + random.nextDouble() * (700 - 100)`. As medições continuam sendo validadas e gravadas pelo fluxo existente, sem acesso ao repository dentro do sensor. Após a implementação, nenhum método desse sensor deverá lançar `UnsupportedOperationException` por falta de código.
-
-### 12.3. Criar testes do sensor de rio
-
-Criar o arquivo **dentro de `src/test/java`**:
-
-```text
-src/test/java/br/com/fiap/territorypredictiveinsightsfev/domain/RiverLevelSensorTest.java
-```
-
-Não colocar esse teste em `src/main/java`: JUnit e Mockito são dependências de teste.
-
-Usar `RainSensorTest` como referência e adaptar tipo, unidade, limites e cálculo. Cobrir pelo menos:
-
-1. Leitura e arredondamento com valores controlados. Exemplo: `0.50` para funcionamento e `0.5356` para leitura devem produzir `421.4 cm`.
-2. Falha com valor aleatório `0.04`, verificando `FonteIndisponivelException` e que a geração da medição não ocorre depois.
-3. Funcionamento no limite `0.05`.
-4. Tipo `RIVER_LEVEL`, unidade `cm` e faixa de 0 a 800.
-5. `Medicao` aceitando 0 e 800, e rejeitando -0.1 e 800.1 com `DadosInvalidosException`.
-
-Executar:
-
-```bash
-bash mvnw -Dtest=RiverLevelSensorTest test
-bash mvnw test
-```
-
-Se forem adicionados exatamente cinco testes e nenhum outro for alterado, o total esperado será **44**. Registrar o total efetivamente executado e o resultado real; não atualizar o README apenas pelo número esperado.
-
-### 12.4. Validar a aplicação e o banco
-
-Executar `bash mvnw spring-boot:run` e seguir este roteiro. Registrar o resultado observado de cada item:
-
-| Etapa | Ação | Resultado esperado |
-|---|---|---|
-| Histórico insuficiente | Com um banco de demonstração vazio, usar opção 2 e escolher ambas as estratégias. | Previsões suspensas com explicação, sem novos alertas. |
-| Coleta | Opção 1, inicialmente 10 rodadas. | Leituras válidas dos três sensores gravadas; possíveis falhas simuladas informadas. Nenhum `[PENDENTE]` por falta de implementação. |
-| Quantidade | Opção 5. | Pelo menos seis leituras válidas por sensor. Se faltar, repetir a coleta: rodadas com falha não contam como medição válida. |
-| Histórico | Opção 3 → medições; consultar cada sensor. | Tipo, valor, unidade e data/hora coerentes. |
-| Previsão | Opção 2 → todas as estratégias. | Dois resultados por sensor, com valores e significados. |
-| Alertas | Opção 3 → alertas. | Alertas gerados anteriormente aparecem com justificativas. Se nenhuma previsão ultrapassar um limite, coletar mais e repetir; a ausência de alerta não é necessariamente erro. |
-| Validação territorial | Opção 4; tentar população negativa e código incorreto ao alterar limiar. | Mensagem clara e alteração recusada. |
-| Configuração | Opção 4; mudar um limiar com `GS2026`, preservando Atenção < Alerta < Crítico; mudar a estratégia padrão. | Novos valores aparecem no status e a opção de estratégia configurada usa a escolha realizada. |
-| Reinício | Anotar contagens/últimas medições e um alerta, sair com 0 e iniciar novamente na mesma pasta. | Medições e alertas permanecem no banco antes de novas leituras. Configurações em memória voltam aos padrões, conforme documentado. |
-
-Para testar com um banco vazio sem apagar o histórico existente, é possível iniciar a aplicação com um caminho separado para demonstração:
-
-```bash
-bash mvnw spring-boot:run -Dspring-boot.run.arguments="--spring.datasource.url=jdbc:h2:file:./data/validacao-pedro"
-```
-
-Esse caminho estará vazio apenas se ainda não tiver sido usado. Para testar o reinício, repita exatamente esse comando e consulte os registros anteriores. Não rode duas instâncias simultâneas contra o mesmo arquivo H2.
-
-### 12.5. Atualizar o README e registrar commits
-
-Após concluir e validar:
-
-- Trocar o estado do sensor de rio para implementado, informando os testes realmente executados.
-- Atualizar o total final de testes e a data da verificação.
-- Registrar o resultado do teste manual de persistência após reinício.
-- Completar nomes, RMs e contribuições reais da equipe.
-- Ajustar a seção de uso de IA para incluir o auxílio realmente utilizado por Pedro e como foi revisado.
-- Converter este roteiro em registro de conclusão ou removê-lo da versão final, preservando as instruções úteis de execução e validação.
-
-Conferir as alterações e registrar primeiro a implementação e seus testes:
-
-```bash
-git diff --check
-git status --short
-git add src/main/java/br/com/fiap/territorypredictiveinsightsfev/domain/RiverLevelSensor.java src/test/java/br/com/fiap/territorypredictiveinsightsfev/domain/RiverLevelSensorTest.java
-git diff --cached
-git commit -m "Implementa sensor de nivel do rio e adiciona testes"
-```
-
-Registrar a documentação atualizada:
-
-```bash
-git add README.md
-git diff --cached
-git commit -m "Documenta validacao final e contribuicoes da equipe"
-git push -u origin fix/sensor-rio-validacao
-```
-
-Se o GitHub exigir autenticação HTTPS, a senha da conta/Google não serve no campo Password do Git. Com GitHub CLI instalado, usar `gh auth login --hostname github.com --git-protocol https --web`, entrar na própria conta e concluir a autorização no navegador. Para não configurar o helper de autenticação permanentemente, responder `n` à pergunta de autenticar o Git e enviar com:
-
-```bash
-git -c credential.helper= -c 'credential.helper=!gh auth git-credential' push -u origin fix/sensor-rio-validacao
-```
-
-É necessário ter permissão de escrita no repositório da Helena. Se houver erro de permissão, confirmar o convite de colaborador; não usar a conta de outra pessoa. Nunca colocar tokens no README ou nos commits.
-
-### 12.6. Integrar e entregar
-
-1. Abrir pull request da branch de Bruna para `main` e revisar os arquivos incluídos.
-2. Integrar essa alteração e abrir/revisar o pull request da branch de Pedro para `main`. A branch de Pedro já deve conter a base de Bruna por ter sido criada a partir dela.
-3. Para preservar os commits individuais e sua autoria, preferir **Create a merge commit** se essa opção estiver disponível no repositório. Se surgirem conflitos no README, manter a documentação final coerente com o código integrado.
-4. Depois de integrar, com o diretório de trabalho limpo, atualizar a versão final e executar a suíte:
-
-```bash
-git switch main
-git pull --ff-only origin main
-bash mvnw test
-```
-
-5. Conferir que a `main` contém os três sensores funcionais, testes, README final e contribuições identificáveis dos integrantes.
-6. Entregar o link do repositório exigido pelo professor. Publicar uma branch não a integra automaticamente à `main`.
+- Fazer um teste manual ponta a ponta e confirmar que medições e alertas persistem depois de reiniciar a aplicação.
+- Integrar a branch `fix/sensor-rio-validacao` à `main` e executar novamente `bash mvnw test` na versão integrada.
 
 ## 13. Uso de inteligência artificial
 
 O ChatGPT foi utilizado como ferramenta de apoio à ideação, à revisão ortográfica e à organização da documentação, além de auxiliar na elaboração e revisão de trechos de código e testes. As sugestões aplicadas foram verificadas por meio da execução local da suíte, com 44 testes aprovados nesta etapa. A equipe permanece responsável pelas decisões, pela compreensão do código e pela validação final do projeto.
 
-## 14. Checklist antes da entrega
+## 14. Checklist da entrega
 
 - [x] Domínio com classe abstrata, herança e estratégias polimórficas implementadas.
 - [x] Exceções customizadas e tratamento no menu presentes.
@@ -438,11 +291,12 @@ O ChatGPT foi utilizado como ferramenta de apoio à ideação, à revisão ortog
 - [x] Entidades, repositories e configuração H2 em arquivo presentes.
 - [ ] Fluxo completo e recuperação de medições/alertas após reinício validados manualmente.
 - [x] Factory e Singleton descritos e justificados neste README.
-- [x] Marcos de 39 testes para chuva e 44 testes após o sensor de rio, incluindo `assertThrows` e Mockito.
+- [x] `assertThrows` para exceções customizadas e Mockito para simular repositórios nos testes de serviço.
 - [x] Suíte atual executada após a implementação do sensor de rio: 44 testes aprovados.
 - [x] Público beneficiado, decisões técnicas, reflexão crítica e uso de IA documentados com as informações confirmadas.
-- [ ] Nomes completos, RMs, contribuições e uso de IA de todos os integrantes confirmados.
-- [ ] Commits dos integrantes e integração final à `main` conferidos.
+- [x] Integrantes e RMs registrados; contribuições descritas conforme o histórico do projeto.
+- [x] Commits das contribuições de Helena, Bruna e Pedro registrados no histórico Git.
+- [ ] Integração da branch `fix/sensor-rio-validacao` à `main`.
 - [ ] Execução seguindo o README conferida na versão final de entrega.
 
 O bônus do enunciado — exportação CSV, simulação de 24 horas ou dados públicos reais como base — não está confirmado nesta versão e não é necessário para cumprir os requisitos obrigatórios. Várias rodadas manuais de leitura, sem modelagem temporal, não equivalem por si só à simulação de 24 horas.
