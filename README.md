@@ -6,20 +6,21 @@ Aplicação Java de console para simular o monitoramento de chuva, nível de rio
 
 ## 1. Estado atual do projeto
 
-**Implementação concluída; validação operacional final pendente.** Os três sensores, persistência, previsões, alertas, menu e testes automatizados estão implementados. A suíte tem 44 testes aprovados. Ainda falta validar manualmente o fluxo completo e a persistência após reiniciar a aplicação, além de integrar esta branch à `main`.
+**Implementação e validação concluídas.** Os três sensores, persistência, previsões, alertas e menu estão implementados. O fluxo foi validado manualmente, incluindo a recuperação de medições e alertas após reiniciar a aplicação. As alterações estão integradas à `main`.
 
 Marco validado em 19/11/2026:
 
 - Sensor de chuva implementado e cinco testes específicos adicionados por Bruna.
 - Compilação com alvo Java 17 (`release 17`).
 - Execução de `bash mvnw test`: **44 testes, 0 falhas, 0 erros e 0 ignorados; BUILD SUCCESS**.
+- Validação manual do fluxo e da persistência após reinício concluída com sucesso.
 - Sensor de nível do rio implementado, com cinco testes específicos adicionados por Pedro.
 - Commit `9a42249`: `Implementa sensor de chuva e adiciona testes unitarios`, enviado ao GitHub.
 - Commit `9baec99`: `Implementa sensor de nivel do rio e adiciona testes`.
 - Commit `45c2d8d`: atualização da documentação do sensor de rio e dos comandos de teste.
 - Sensor de umidade já implementado na base recebida.
-- Persistência e menu implementados; validação manual completa, incluindo reinício da aplicação, pendente.
-- Integração das branches à `main` pendente de confirmação.
+- Persistência e menu implementados; medições e alertas preservados após reiniciar a aplicação na mesma pasta.
+- Implementação do sensor de rio integrada à `main` pelo pull request #2.
 
 O resultado de 44 testes corresponde ao estado atual após a implementação dos sensores de chuva e rio.
 
@@ -249,7 +250,7 @@ Resultado confirmado no marco atual: **44 testes aprovados**, incluindo cinco em
 
 Os testes seguem Arrange, Act e Assert. `assertThrows` verifica exceções customizadas. `ServicoMonitoramentoTest` usa repositórios simulados com Mockito para conferir emissão de alerta, cálculo e gravação sem depender de banco ou digitação no console. Outras classes cobrem estratégias, território, configuração, fábrica, medições e áreas de risco; há também um teste de carregamento do contexto Spring.
 
-Os testes específicos do sensor de rio estão em `RiverLevelSensorTest`. A suíte automatizada não substitui a validação manual completa do fluxo e da recuperação do histórico após reinício.
+Os testes específicos do sensor de rio estão em `RiverLevelSensorTest`. Além da suíte automatizada, o fluxo foi validado manualmente, incluindo a recuperação do histórico após reinício.
 
 ## 11. Reflexão crítica
 
@@ -272,10 +273,9 @@ O alerta deve apoiar uma pessoa responsável, fornecendo sensor, valor, limite, 
 - Incluídos testes específicos para os sensores de chuva e rio.
 - Registradas as contribuições e os RMs da equipe na seção 2.
 
-### Ainda por validar antes da entrega
+### Estado final
 
-- Fazer um teste manual ponta a ponta e confirmar que medições e alertas persistem depois de reiniciar a aplicação.
-- Integrar a branch `fix/sensor-rio-validacao` à `main` e executar novamente `bash mvnw test` na versão integrada.
+Nenhuma pendência técnica conhecida. A suíte automatizada passou com 44 testes e o fluxo com persistência após reinício foi validado manualmente.
 
 ## 13. Uso de inteligência artificial
 
@@ -289,14 +289,14 @@ O ChatGPT foi utilizado como ferramenta de apoio à ideação, à revisão ortog
 - [x] Sensor de umidade implementado na base recebida.
 - [x] Sensor de nível do rio implementado e testado por Pedro.
 - [x] Entidades, repositories e configuração H2 em arquivo presentes.
-- [ ] Fluxo completo e recuperação de medições/alertas após reinício validados manualmente.
+- [x] Fluxo completo e recuperação de medições/alertas após reinício validados manualmente.
 - [x] Factory e Singleton descritos e justificados neste README.
 - [x] `assertThrows` para exceções customizadas e Mockito para simular repositórios nos testes de serviço.
 - [x] Suíte atual executada após a implementação do sensor de rio: 44 testes aprovados.
 - [x] Público beneficiado, decisões técnicas, reflexão crítica e uso de IA documentados com as informações confirmadas.
 - [x] Integrantes e RMs registrados; contribuições descritas conforme o histórico do projeto.
 - [x] Commits das contribuições de Helena, Bruna e Pedro registrados no histórico Git.
-- [ ] Integração da branch `fix/sensor-rio-validacao` à `main`.
-- [ ] Execução seguindo o README conferida na versão final de entrega.
+- [x] Integração da branch `fix/sensor-rio-validacao` à `main` pelo pull request #2.
+- [x] Execução seguindo o README conferida na versão integrada à `main`.
 
 O bônus do enunciado — exportação CSV, simulação de 24 horas ou dados públicos reais como base — não está confirmado nesta versão e não é necessário para cumprir os requisitos obrigatórios. Várias rodadas manuais de leitura, sem modelagem temporal, não equivalem por si só à simulação de 24 horas.
