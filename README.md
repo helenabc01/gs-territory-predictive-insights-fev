@@ -8,13 +8,15 @@ Aplicação Java de console para simular o monitoramento de chuva, nível de rio
 
 **Esta versão ainda está em conclusão.** O sensor de nível do rio foi implementado por Pedro e os testes automatizados da suíte foram ampliados. A validação manual completa do fluxo e da persistência após reinício continua pendente.
 
-Marco validado em 19/11/2026 na branch `fix/sensor-chuva-readme`:
+Marco validado em 19/11/2026:
 
 - Sensor de chuva implementado e cinco testes específicos adicionados por Bruna.
 - Compilação com alvo Java 17 (`release 17`).
 - Execução de `bash mvnw test`: **44 testes, 0 falhas, 0 erros e 0 ignorados; BUILD SUCCESS**.
 - Sensor de nível do rio implementado, com cinco testes específicos adicionados por Pedro.
 - Commit `9a42249`: `Implementa sensor de chuva e adiciona testes unitarios`, enviado ao GitHub.
+- Branch `fix/sensor-rio-validacao` criada para concluir o sensor de rio.
+- Commit `9baec99`: `Implementa sensor de nivel do rio e adiciona testes`, contendo a implementação e os cinco testes específicos do sensor de rio.
 - Sensor de umidade já implementado na base recebida.
 - Persistência e menu implementados; validação manual completa, incluindo reinício da aplicação, pendente.
 - Integração das branches à `main` pendente de confirmação.
@@ -235,6 +237,12 @@ Execute somente os testes do sensor de chuva:
 
 ```bash
 bash mvnw -Dtest=RainSensorTest test
+```
+
+Execute somente os testes do sensor de nível do rio:
+
+```bash
+bash mvnw -Dtest=RiverLevelSensorTest test
 ```
 
 Resultado confirmado no marco atual: **44 testes aprovados**, incluindo cinco em `RainSensorTest` e cinco em `RiverLevelSensorTest`:
